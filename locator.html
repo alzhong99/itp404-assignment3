@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Week 4 HW: Locate Me</title>
+  <meta name="viewport" content="initial-scale=1.0">
+  <meta charset="utf-8">
+  <style>
+    #map {
+      height: 100%;
+    }
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <script>
+    var map, marker, geocoder, infobox;
+    function initMap() {
+      map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 15
+      });
+      var icon = {
+        url: 'https://image.flaticon.com/icons/png/128/63/63568.png',
+        scaledSize: new google.maps.Size(50, 50)
+      }
+      marker = new google.maps.Marker({
+        map: map,
+        icon: icon,
+        animation: google.maps.Animation.DROP
+      });
+      geocoder = new google.maps.Geocoder();
+      marker.addListener('click', function() {
+        infobox.open(map, marker);
+      })
+    }
+    navigator.geolocation.getCurrentPosition(function(position) {
+      var coords = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+      map.setCenter(coords);
+      marker.setPosition(coords);
+      geocoder.geocode({
+        location: coords
+      }, function(results) {
+        var address = results[0].formatted_address;
+        infobox = new google.maps.InfoWindow({
+          content: 'I see you!<br/><br/><img src="http://web-images.chacha.com/images/how-creepy-are-you-jul-26-2012-2-600x400.jpg" height=100px/><br/><br/>' + address
+        })
+      });
+    });
+  </script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC5JyDtsnWV3EbCC0dt7MNlroyp4N0YdZ4&callback=initMap"
+    async defer></script>
+</body>
+</html>
